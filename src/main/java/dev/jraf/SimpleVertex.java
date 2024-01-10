@@ -40,4 +40,21 @@ public class SimpleVertex implements Vertex {
     @Override public String label() {
         return this.label;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vertex)) return false;
+        Vertex other = (Vertex)o;
+        return label().equals(other.label());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public int hashCode() {
+        return label().hashCode();
+    }
 }
