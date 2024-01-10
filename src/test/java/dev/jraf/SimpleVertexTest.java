@@ -48,4 +48,40 @@ class SimpleVertexTest {
         Vertex sut = new SimpleVertex(label);
         assertEquals(label, sut.label());
     }
+
+    @Test
+    void equalsOnSameVertexObjectReturnsTrue() {
+        Vertex sut = new SimpleVertex("Ford");
+        assertEquals(sut, sut);
+    }
+
+    @Test
+    void equalsWithObjectThatIsNotAVertexReturnsFalse() {
+        Vertex sut = new SimpleVertex("Trillian");
+        assertNotEquals(sut, 5);
+    }
+
+    @Test
+    void equalsOnVerticesWithEqualLabelsAreEqual() {
+        Vertex v1 = new SimpleVertex("hello");
+        Vertex v2 = new SimpleVertex("hello");
+        assertEquals(v1, v2);
+    }
+
+    @Test
+    void equalsIsSymmetric() {
+        Vertex v1 = new SimpleVertex("Arthur");
+        Vertex v2 = new SimpleVertex("Arthur");
+        assertEquals(v1, v2);
+        assertEquals(v2, v1);
+    }
+
+    void equalsIsTransitive() {
+        Vertex v1 = new SimpleVertex("Slartibartfast");
+        Vertex v2 = new SimpleVertex("Slartibartfast");
+        Vertex v3 = new SimpleVertex("Slartibartfast");
+        assertEquals(v1, v2);
+        assertEquals(v2, v3);
+        assertEquals(v1, v3);
+    }
 }
