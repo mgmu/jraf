@@ -38,7 +38,7 @@ public class SimpleVertex implements Vertex {
      * {@inheritDoc}
      */
     @Override public String label() {
-        return this.label;
+        return label;
     }
 
     /**
@@ -48,13 +48,13 @@ public class SimpleVertex implements Vertex {
         if (this == o) return true;
         if (!(o instanceof Vertex)) return false;
         Vertex other = (Vertex)o;
-        return label().equals(other.label());
+        return label.equals(other.label());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override public int hashCode() {
-        return label().hashCode();
+        return label.hashCode();
     }
 }
