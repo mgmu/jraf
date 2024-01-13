@@ -4,6 +4,7 @@ package dev.jraf;
  * A simple implementation of {@code Vertex}.
  *
  * @author Guillermo Morón Usón
+ * @see    Vertex
  */
 public class SimpleVertex implements Vertex {
 
