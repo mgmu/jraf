@@ -1,5 +1,7 @@
 package dev.jraf;
 
+import java.util.Objects;
+
 /**
  * A simple implementation of {@code Edge}.
  *
@@ -63,7 +65,7 @@ public class SimpleEdge implements Edge {
     /**
      * {@inheritDoc}
      */
-    @Override int hashCode() {
+    @Override public int hashCode() {
         return Objects.hash(tail(), head());
     }
 }
