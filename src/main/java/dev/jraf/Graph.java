@@ -2,6 +2,7 @@ package dev.jraf;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 /**
  * A simple, directed graph. A directed graph has unidirectionnal edges and a
@@ -13,6 +14,8 @@ import java.util.Optional;
  * @see    Edge
  */
 public interface Graph {
+
+    static final String NULL_VERTEX_MSG = "vertex must be non-null";
 
     /**
      * Returns the vertices of this graph.
@@ -30,53 +33,80 @@ public interface Graph {
 
     /**
      * Returns the outgoing edges of the given vertex, if it is a vertex of this
-     * graph. The given vertex must be non-null.
+     * graph. The given vertex must be non-null. If the given vertex is non-null
+     * and present but has no outgoing edges, then an optional of the empty list
+     * is returned.
      *
      * @param  vertex a non-null vertex
      * @return an optional list of edges, the outgoing edges of the given vertex
      */
     default Optional<List<Edge>> outgoingEdgesOf(Vertex vertex) {
-        return Optional.ofNullable(null);
+        if (vertex == null)
+            throw new NullPointerException(NULL_VERTEX_MSG);
+        if (!vertices().contains(vertex))
+            return Optional.empty();
+        List<Edge> outgoingEdges = new ArrayList<>();
+        for (Edge edge: edges()) {
+            if (edge.tail().equals(vertex))
+                outgoingEdges.add(edge);
+        }
+        return Optional.of(outgoingEdges);
     }
 
     /**
      * Returns the neighbors of the given vertex, that is the vertices that are
      * the heads of the outgoing edges of this vertex, if it is a vertex of this
-     * graph. The given vertex must be non-null.
+     * graph. The given vertex must be non-null. If the given vertex is non-null
+     * and has no neighbors, an optional of the empty list is returned.
      *
      * @param  vertex a non-null vertex
      * @return an optional list of vertices, the neighbors of the given vertex
      */
     default Optional<List<Vertex>> neighborsOf(Vertex vertex) {
-        return Optional.ofNullable(null);
+        if (vertex == null)
+            throw new NullPointerException(NULL_VERTEX_MSG);
+        if (!vertices().contains(vertex))
+            return Optional.empty();
+        List<Vertex> neighbors = new ArrayList<>();
+        for (Edge edge: edges()) {
+            if (edge.tail().equals(vertex))
+                neighbors.add(edge.head());
+        }
+        return Optional.of(neighbors);
     }
 
     /**
      * Returns true if for every two vertices x and y, there is an edge (x, y).
      *
      * @return true if there is an edge (x, y) for every two vertices x and y
+     * @throws UnsupportedOperationException until its implementation
      */
     default boolean isComplete() {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Returns true if for every edge (x, y), there is an edge (y, x).
      *
      * @return true if for every edge (x, y), there is an edge (y, x)
+     * @throws UnsupportedOperationException until its implementation
      */
     default boolean isSymmetric() {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Completes this graph by adding all the edges needed in order to be
      * complete, that is for every two vertices x and y there is an edge (x, y).
+     *
+     * @throws UnsupportedOperationException until its implementation
      */
     void complete();
 
     /**
      * Symmetrizes this graph by adding for every edge (x, y) an edge (y, x).
+     *
+     * @throws UnsupportedOperationException until its implementation     
      */
     void symmetrize();
 
@@ -109,6 +139,16 @@ public interface Graph {
     void remove(Vertex vertex);
 
     /**
+     * Removes the vertex that has the given label. The label must be non-null
+     * and if there is no vertex with the given label, nothing is done. If the
+     * label is non-null and there is a vertex of given label, its outgoing
+     * edges are also removed.
+     *
+     * @param label the label of the vertex to remove
+     */
+    void remove(String label);
+
+    /**
      * Removes the given edge from this graph. The edge must be non-null and if
      * it is not present, nothing is done. If the edge is non-null and present,
      * it is removed, but the head and tail are not.
@@ -118,14 +158,24 @@ public interface Graph {
     void remove(Edge edge);
 
     /**
+     * Removes the edge which tail and head have the given labels. The labels
+     * must be non-null.
+     *
+     * @param lt the label of the tail of the edge to remove
+     * @param lh the label of the head of the edge to remove
+     */
+    void remove(String lt, String lh);
+
+    /**
      * Returns the vertex of given label, if present. The label must be
      * non-null.
      *
      * @param label the label of the vertex to get
      * @return an optional vertex of given label
+     * @throws UnsupportedOperationException until its implementation     
      */
     default Optional<Vertex> get(String label) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -135,9 +185,10 @@ public interface Graph {
      * @param lt the label of the tail of the edge to get
      * @param th the label of the head of the edge to get
      * @return an optional edge between the vertices of given labels
+     * @throw UnsupportedOperationException until its implementation
      */
     default Optional<Edge> get(String lt, String lh) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**

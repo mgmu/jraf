@@ -3,6 +3,8 @@ package dev.jraf;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
+import java.util.Optional;
+import java.util.ArrayList;
 
 class SimpleGraphTest {
 
@@ -271,7 +273,156 @@ class SimpleGraphTest {
     void removeEdgeFromNullTailLabelThrowsNPEWithMessage() {
         Graph sut = new SimpleGraph();
         Exception e = assertThrows(NullPointerException.class,
-                () -> sut.remove((String)null, new SimpleVertex("2")));
+                () -> sut.remove((String)null, "2"));
         assertEquals("labels must be non-null", e.getMessage());
+    }
+
+    @Test
+    void removeEdgeFromNullHeadLabelThrowsNPEWithMessage() {
+        Graph sut = new SimpleGraph();
+        Exception e = assertThrows(NullPointerException.class,
+                () -> sut.remove("1", (String)null));
+        assertEquals("labels must be non-null", e.getMessage());
+    }
+
+    @Test
+    void removeEdgeFromNullLabelsThrowsNPEWithMessage() {
+        Graph sut = new SimpleGraph();
+        Exception e = assertThrows(NullPointerException.class,
+                () -> sut.remove((String)null, (String)null));
+        assertEquals("labels must be non-null", e.getMessage());        
+    }
+
+    @Test
+    void removeAbsentEdgeFromLabelsDoesNotChangeEdges() {
+        Graph sut = new SimpleGraph();
+        Vertex v1 = new SimpleVertex("1");
+        Vertex v2 = new SimpleVertex("2");
+        Vertex v3 = new SimpleVertex("3");
+        Edge e1 = new SimpleEdge(v1, v2);
+        Edge e2 = new SimpleEdge(v2, v3);
+        Edge e3 = new SimpleEdge(v3, v1);
+        sut.add(v1);
+        sut.add(v2);
+        sut.add(v3);
+        sut.add(e1);
+        sut.add(e2);
+        sut.add(e3);
+        sut.remove("1", "3");
+        assertEquals(3, sut.edges().size());
+    }
+
+    @Test
+    void removePresentEdgeFromLabelsDecreasesNumberOfEdgesByOne() {
+        Graph sut = new SimpleGraph();
+        Vertex v1 = new SimpleVertex("1");
+        Vertex v2 = new SimpleVertex("2");
+        Vertex v3 = new SimpleVertex("3");
+        Edge e1 = new SimpleEdge(v1, v2);
+        Edge e2 = new SimpleEdge(v2, v3);
+        Edge e3 = new SimpleEdge(v3, v1);
+        sut.add(v1);
+        sut.add(v2);
+        sut.add(v3);
+        sut.add(e1);
+        sut.add(e2);
+        sut.add(e3);
+        sut.remove("2", "3");
+        assertEquals(2, sut.edges().size());
+    }
+
+    @Test
+    void outgoingEdgesOfNullVertexThrowsNPEWithMessage() {
+        Graph sut = new SimpleGraph();
+        Exception e = assertThrows(NullPointerException.class,
+                () -> sut.outgoingEdgesOf(null));
+        assertEquals("vertex must be non-null", e.getMessage());
+    }
+
+    @Test
+    void outgoingEdgesOfAbsentVertexReturnsEmptyOptional() {
+        Graph sut = new SimpleGraph();
+        Optional<List<Edge>> optEdges = sut.outgoingEdgesOf(
+          new SimpleVertex("absent"));
+        assertFalse(optEdges.isPresent());
+    }
+
+    @Test
+    void outgoingEdgesOfPresentVertexButWithoutOutgoingEdgesReturnsEmptyList() {
+        Graph sut = new SimpleGraph();
+        sut.add(new SimpleVertex("1"));
+        Optional<List<Edge>> optEdges =
+            sut.outgoingEdgesOf(new SimpleVertex("1"));
+        List<Edge> res = optEdges.get();
+        assertTrue(res.isEmpty());
+    }
+
+    @Test
+    void outgoingEdgesOfPresentVertexReturnsItsOutgoingEdges() {
+        Graph sut = new SimpleGraph();
+        Vertex v1 = new SimpleVertex("1");
+        Vertex v2 = new SimpleVertex("2");
+        Vertex v3 = new SimpleVertex("3");
+        sut.add(v1);
+        sut.add(v2);
+        sut.add(v3);
+        Edge e1 = new SimpleEdge(v3, v1);
+        Edge e2 = new SimpleEdge(v3, v2);         
+        sut.add(e1);
+        sut.add(e2);
+        List<Edge> sol = new ArrayList<>();
+        sol.add(e1);
+        sol.add(e2);
+        Optional<List<Edge>> optEdges =
+            sut.outgoingEdgesOf(new SimpleVertex("3"));
+        assertTrue(optEdges.isPresent());
+        List<Edge> res = optEdges.get();
+        boolean e1Present = res.contains(e1);
+        boolean e2Present = res.contains(e2);
+        boolean juste1Ande2returned = res.size() == 2;
+        assertTrue(e1Present && e2Present && juste1Ande2returned);
+    }
+
+    @Test
+    void neighborsOfNullVertexThrowsNPEWithMessage() {
+        Graph sut = new SimpleGraph();
+        Exception e = assertThrows(NullPointerException.class,
+                () -> sut.neighborsOf(null));
+        assertEquals("vertex must be non-null", e.getMessage());
+    }
+
+    @Test
+    void neighborsOfAbsentVertexReturnsEmptyOptional() {
+        Graph sut = new SimpleGraph();
+        Optional<List<Vertex>> opt = sut.neighborsOf(new SimpleVertex("2"));
+        assertFalse(opt.isPresent());
+    }
+
+    @Test
+    void neighborsOfPresentVertexWithoutNeighborsReturnsOptionalOfEmptyList() {
+        Graph sut = new SimpleGraph();
+        Vertex v1 = new SimpleVertex("1");
+        sut.add(v1);
+        Optional<List<Vertex>> opt = sut.neighborsOf(v1);
+        assertTrue(opt.isPresent());
+        List<Vertex> res = opt.get();
+        assertTrue(res.isEmpty());
+    }
+
+    @Test
+    void neighborsOfPresentVertexReturnsNeighborsOfVertex() {
+        Graph sut = new SimpleGraph();
+        Vertex v1 = new SimpleVertex("1");
+        Vertex v2 = new SimpleVertex("2");
+        Vertex v3 = new SimpleVertex("3");
+        sut.add(new SimpleEdge(v1, v2));
+        sut.add(new SimpleEdge(v1, v3));
+        Optional<List<Vertex>> opt = sut.neighborsOf(v1);
+        assertTrue(opt.isPresent());
+        List<Vertex> neighbors = opt.get();
+        boolean v2IsNeighbor = neighbors.contains(v2);
+        boolean v3IsNeighbor = neighbors.contains(v3);
+        boolean justThem = neighbors.size() == 2;
+        assertTrue(v2IsNeighbor && v3IsNeighbor && justThem);
     }
 }
