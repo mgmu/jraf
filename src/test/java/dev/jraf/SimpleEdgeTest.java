@@ -8,13 +8,13 @@ class SimpleEdgeTest {
     @Test
     void instantiationWithNullVerticesThrowsNullPointerException() {
         assertThrows(NullPointerException.class,
-                () -> new SimpleEdge(null, null));
+                () -> new SimpleEdge((Vertex)null, (Vertex)null));
     }
 
     @Test
     void msgOfNPEOnInstantiationIndicatesThatVerticesMustBeNonNull() {
         Exception e = assertThrows(NullPointerException.class,
-                () -> new SimpleEdge(null, null));
+                () -> new SimpleEdge((Vertex)null, (Vertex)null));
         assertEquals("vertices must be non-null", e.getMessage());
     }
 
@@ -121,5 +121,26 @@ class SimpleEdgeTest {
         assertEquals(e1, e2);
         assertEquals(e2, e3);
         assertEquals(e1, e3);
+    }
+
+    @Test
+    void instanciationFromNullLabelsThrowsNPEWithMessage() {
+        Exception e = assertThrows(NullPointerException.class,
+                () -> new SimpleEdge((String)null, (String)null));
+        assertEquals("labels must be non-null", e.getMessage());
+    }
+
+    @Test
+    void instanciationFromLabelsCreatesNewEdgeBetweenVerticesOfGivenLabels() {
+        Edge sut = new SimpleEdge("a", "b");
+        assertEquals("a", sut.tail().label());
+        assertEquals("b", sut.head().label());
+    }
+
+    @Test
+    void instanciationFromEqualLabelsThrowsIllegalArgumentExceptionWithMsg() {
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> new SimpleEdge("loop", "loop"));
+        assertEquals("loops are forbidden", e.getMessage());
     }
 }
