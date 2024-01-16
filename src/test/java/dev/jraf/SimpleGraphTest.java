@@ -425,4 +425,41 @@ class SimpleGraphTest {
         boolean justThem = neighbors.size() == 2;
         assertTrue(v2IsNeighbor && v3IsNeighbor && justThem);
     }
+
+    @Test
+    void numberOfVerticesInNewGraphIs0() {
+        Graph sut = new SimpleGraph();
+        assertEquals(0, sut.numVertices());
+    }
+
+    @Test
+    void numberOfVerticesAfter2VertexAddsIs2() {
+        Graph sut = new SimpleGraph();
+        sut.add(new SimpleVertex("1"));
+        sut.add(new SimpleVertex("2"));
+        assertEquals(2, sut.numVertices());
+    }
+
+    @Test
+    void numberOfVerticesAfter2VertexAnd1EdgeWithNewVertexAddsIs3() {
+        Graph sut = new SimpleGraph();
+        sut.add(new SimpleVertex("1"));
+        sut.add(new SimpleVertex("2"));
+        sut.add(new SimpleEdge("2", "3"));
+        assertEquals(3, sut.numVertices());
+    }
+    
+    @Test
+    void numberOfEdgesInEmptyGraphIs0() {
+        Graph sut = new SimpleGraph();
+        assertEquals(0, sut.numEdges());
+    }
+
+    @Test
+    void numberOfEdgesInGraphWith2VerticesIs2() {
+        Graph sut = new SimpleGraph();
+        sut.add(new SimpleEdge("1", "2"));
+        sut.add(new SimpleEdge("2", "3"));
+        assertEquals(2, sut.numEdges());
+    }
 }
