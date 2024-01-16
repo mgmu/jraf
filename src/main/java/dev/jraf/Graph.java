@@ -209,4 +209,21 @@ public interface Graph {
      * @return an int, the hash code of this graph
      */
     @Override int hashCode();
+
+    /**
+     * Returns the number of vertices in this graph.
+     *
+     * @return an int, the number of vertices in this graph
+     */
+    default int numVertices() {
+        return vertices().size();
+    }
+
+    /**
+     * Returns the number of edges in this graph.
+     * @return an int, the number of edges in this graph
+     */
+    default int numEdges() {
+        return edges().size();
+    }
 }
