@@ -6,11 +6,6 @@ import java.util.Objects;
 
 public abstract class AbstractGraph implements Graph {
 
-    private static final String NULL_VERTEX_MSG = "vertex must be non-null";
-    private static final String NULL_EDGE_MSG = "edge must be non-null";
-    private static final String NULL_LABEL_MSG = "label must be non-null";
-    private static final String NULL_LABELS_MSG = "labels must be non-null";
-
     // the vertices of this graph
     private final List<Vertex> vertices = new ArrayList<>();
 
@@ -35,8 +30,7 @@ public abstract class AbstractGraph implements Graph {
      * {@inheritDoc}
      */
     @Override public void add(Vertex vertex) {
-        if (vertex == null)
-            throw new NullPointerException(NULL_VERTEX_MSG);
+        Graphs.requireNonNull(vertex);
         if (!vertices.contains(vertex))
             vertices.add(vertex);
     }
@@ -45,8 +39,7 @@ public abstract class AbstractGraph implements Graph {
      * {@inheritDoc}
      */
     @Override public void add(Edge edge) {
-        if (edge == null)
-            throw new NullPointerException(NULL_EDGE_MSG);
+        Graphs.requireNonNull(edge);
         if (!vertices.contains(edge.head()))
             vertices.add(edge.head());
         if (!vertices.contains(edge.tail()))
@@ -59,8 +52,7 @@ public abstract class AbstractGraph implements Graph {
      * {@inheritDoc}
      */
     @Override public void remove(Vertex vertex) {
-        if (vertex == null)
-            throw new NullPointerException(NULL_VERTEX_MSG);
+        Graphs.requireNonNull(vertex);
         List<Edge> toRemove = new ArrayList<>();
         for (Edge edge: edges) {
             if (edge.tail().equals(vertex) || edge.head().equals(vertex))
@@ -74,8 +66,7 @@ public abstract class AbstractGraph implements Graph {
      * {@inheritDoc}
      */
     public void remove(String label) {
-        if (label == null)
-            throw new NullPointerException(NULL_LABEL_MSG);
+        Graphs.requireNonNull(label);
         Vertex toRemove = null;
         for (Vertex vertex: vertices) {
             if (vertex.label().equals(label)) {
@@ -89,8 +80,7 @@ public abstract class AbstractGraph implements Graph {
      * {@inheritDoc}
      */
     @Override public void remove(Edge edge) {
-        if (edge == null)
-            throw new NullPointerException(NULL_EDGE_MSG);
+        Graphs.requireNonNull(edge);
         edges.remove(edge);
     }
 
@@ -98,8 +88,8 @@ public abstract class AbstractGraph implements Graph {
      * {@inheritDoc}
      */
     public void remove(String lt, String lh) {
-        if (lt == null || lh == null)
-            throw new NullPointerException(NULL_LABELS_MSG);
+        Graphs.requireNonNull(lt);
+        Graphs.requireNonNull(lh);
         Edge toRemove = null;
         for (Edge edge: edges) {
             if (edge.tail().label().equals(lt)

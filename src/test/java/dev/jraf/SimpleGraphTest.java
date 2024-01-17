@@ -274,7 +274,7 @@ class SimpleGraphTest {
         Graph sut = new SimpleGraph();
         Exception e = assertThrows(NullPointerException.class,
                 () -> sut.remove((String)null, "2"));
-        assertEquals("labels must be non-null", e.getMessage());
+        assertEquals("label must be non-null", e.getMessage());
     }
 
     @Test
@@ -282,7 +282,7 @@ class SimpleGraphTest {
         Graph sut = new SimpleGraph();
         Exception e = assertThrows(NullPointerException.class,
                 () -> sut.remove("1", (String)null));
-        assertEquals("labels must be non-null", e.getMessage());
+        assertEquals("label must be non-null", e.getMessage());
     }
 
     @Test
@@ -290,7 +290,7 @@ class SimpleGraphTest {
         Graph sut = new SimpleGraph();
         Exception e = assertThrows(NullPointerException.class,
                 () -> sut.remove((String)null, (String)null));
-        assertEquals("labels must be non-null", e.getMessage());        
+        assertEquals("label must be non-null", e.getMessage());        
     }
 
     @Test

@@ -3,6 +3,8 @@ package dev.jraf;
 import java.util.NoSuchElementException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A function that associates edges to doubles. This class is the base class to
@@ -16,9 +18,6 @@ import java.util.HashMap;
  */
 public abstract class AbstractEdgeFunction {
 
-    protected static final String NULL_EDGE_MSG = "edge must be non-null";
-    protected static final String NULL_LABELS_MSG = "labels must be non-null";
-
     // the association of edges and doubles
     protected final Map<Edge, Double> assoc = new HashMap<>();
 
@@ -31,8 +30,7 @@ public abstract class AbstractEdgeFunction {
      * @return     a double, the value associated to the given edge
      */
     public double get(Edge edge) {
-        if (edge == null)
-            throw new NullPointerException(NULL_EDGE_MSG);
+        Graphs.requireNonNull(edge);
         if (!assoc.containsKey(edge))
             throw new NoSuchElementException("no value associated to ("
                     + edge.tail().label() + ", " + edge.head().label() + ")");
@@ -50,8 +48,8 @@ public abstract class AbstractEdgeFunction {
      *            vertices of given labels.
      */
     public double get(String lt, String lh) {
-        if (lt == null || lh == null)
-            throw new NullPointerException(NULL_LABELS_MSG);
+        Graphs.requireNonNull(lt);
+        Graphs.requireNonNull(lh);
         for (Edge edge: assoc.keySet()) {
             if (edge.tail().label().equals(lt)
                     && edge.head().label().equals(lh)) {
@@ -60,6 +58,12 @@ public abstract class AbstractEdgeFunction {
         }
         throw new NoSuchElementException("no value associated to (" + lt + ", "
                 + lh + ")");
+    }
+
+    public List<Edge> edges() {
+        List<Edge> edges = new ArrayList<>();
+        edges.addAll(assoc.keySet());
+        return edges;
     }
 
     /**

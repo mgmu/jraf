@@ -15,8 +15,6 @@ import java.util.ArrayList;
  */
 public interface Graph {
 
-    static final String NULL_VERTEX_MSG = "vertex must be non-null";
-
     /**
      * Returns the vertices of this graph.
      *
@@ -41,8 +39,7 @@ public interface Graph {
      * @return an optional list of edges, the outgoing edges of the given vertex
      */
     default Optional<List<Edge>> outgoingEdgesOf(Vertex vertex) {
-        if (vertex == null)
-            throw new NullPointerException(NULL_VERTEX_MSG);
+        Graphs.requireNonNull(vertex);
         if (!vertices().contains(vertex))
             return Optional.empty();
         List<Edge> outgoingEdges = new ArrayList<>();
@@ -63,8 +60,7 @@ public interface Graph {
      * @return an optional list of vertices, the neighbors of the given vertex
      */
     default Optional<List<Vertex>> neighborsOf(Vertex vertex) {
-        if (vertex == null)
-            throw new NullPointerException(NULL_VERTEX_MSG);
+        Graphs.requireNonNull(vertex);
         if (!vertices().contains(vertex))
             return Optional.empty();
         List<Vertex> neighbors = new ArrayList<>();

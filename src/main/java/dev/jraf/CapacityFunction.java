@@ -13,8 +13,7 @@ public class CapacityFunction extends AbstractEdgeFunction {
      * {@inheritDoc}
      */
     @Override public AbstractEdgeFunction add(Edge edge, double value) {
-        if (edge == null)
-            throw new NullPointerException(NULL_EDGE_MSG);
+        Graphs.requireNonNull(edge);
         if (assoc.containsKey(edge))
             return this;
         AbstractEdgeFunction f = new CapacityFunction();
@@ -27,8 +26,7 @@ public class CapacityFunction extends AbstractEdgeFunction {
      * {@inheritDoc}
      */
     @Override public AbstractEdgeFunction remove(Edge edge) {
-        if (edge == null)
-            throw new NullPointerException(NULL_EDGE_MSG);
+        Graphs.requireNonNull(edge);
         if (!assoc.containsKey(edge))
             return this;
         AbstractEdgeFunction f = new CapacityFunction();
@@ -41,8 +39,8 @@ public class CapacityFunction extends AbstractEdgeFunction {
      * {@inheritDoc}
      */
     @Override public AbstractEdgeFunction remove(String lt, String lh) {
-        if (lt == null || lh == null)
-            throw new NullPointerException(NULL_LABELS_MSG);
+        Graphs.requireNonNull(lt);
+        Graphs.requireNonNull(lh);
         for (Edge edge: assoc.keySet()) {
             if (edge.tail().label().equals(lt)
                     && edge.head().label().equals(lh)) {

@@ -3,6 +3,8 @@ package dev.jraf;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.ArrayList;
 
 class CapacityFunctionTest {
     
@@ -64,7 +66,7 @@ class CapacityFunctionTest {
         AbstractEdgeFunction sut = new CapacityFunction();
         Exception e = assertThrows(NullPointerException.class,
                 () -> sut.get(null, "2"));
-        assertEquals("labels must be non-null", e.getMessage());
+        assertEquals("label must be non-null", e.getMessage());
     }
 
     @Test
@@ -72,7 +74,7 @@ class CapacityFunctionTest {
         AbstractEdgeFunction sut = new CapacityFunction();
         Exception e = assertThrows(NullPointerException.class,
                 () -> sut.get("1", null));
-        assertEquals("labels must be non-null", e.getMessage());
+        assertEquals("label must be non-null", e.getMessage());
     }
 
     @Test
@@ -180,7 +182,7 @@ class CapacityFunctionTest {
         AbstractEdgeFunction sut = new CapacityFunction();
         Exception e = assertThrows(NullPointerException.class,
                 () -> sut.remove(null, null));
-        assertEquals("labels must be non-null", e.getMessage());
+        assertEquals("label must be non-null", e.getMessage());
     }
 
     @Test
@@ -212,5 +214,24 @@ class CapacityFunctionTest {
         sut = sut.add(e1, 3).add(e2, 4).add(e3, 5).remove("2", "3");
         assertEquals(3, sut.get(e1));
         assertEquals(5, sut.get(e3));
+    }
+
+    @Test
+    void edgesOnInstanciationReturnsTheEmptyList() {
+        AbstractEdgeFunction sut = new CapacityFunction();
+        assertTrue(sut.edges().isEmpty());
+    }
+
+    @Test
+    void edgesReturnsContainedEdges() {
+        AbstractEdgeFunction sut = new CapacityFunction();
+        Edge e1 = new SimpleEdge("1", "2");
+        Edge e2 = new SimpleEdge("41", "42");
+        sut = sut.add(e1, 1).add(e2, 2);
+        List<Edge> edges = sut.edges();
+        boolean twoEdges = edges.size() == 2;
+        boolean containsE1 = edges.contains(e1);
+        boolean containsE2 = edges.contains(e2);
+        assertTrue(twoEdges && containsE1 && containsE2);
     }
 }
