@@ -157,7 +157,7 @@ public class Network extends AbstractGraph {
      * @param value the value of the capacity
      */
     public void addCapacity(Edge edge, double value) {
-        Graphs.requireNonNull(edge);
+        cap = (CapacityFunction) cap.add(edge, value);
         checkAndSetFullAssociation();
     }
 
@@ -190,7 +190,7 @@ public class Network extends AbstractGraph {
         for (Edge e: edges()) {
             if (!associatedEdges.contains(e)) {
                 isFullyAssociated = false;
-                break;
+                return;
             }
         }
         isFullyAssociated = true;
