@@ -1,35 +1,59 @@
 package dev.jraf;
 
 /**
- * A vertex of a graph, labeled with a string.
+ * A representation of a vertex, labeled with an integer value. This class is
+ * immutable.
  *
  * @author Guillermo Morón Usón
  */
-public interface Vertex {
+public final class Vertex {
+
+    private final int label;
+
+    // Not extendable
+    private Vertex(int label) {
+        this.label = label;
+    }
+
+    /**
+     * Creates a new vertex of given label and returns it.
+     *
+     * @param label the label of the new vertex
+     * @return      a new vertex of given label
+     */
+    public static Vertex of(int label) {
+        return new Vertex(label);
+    }
 
     /**
      * Returns the label of this vertex.
      *
-     * @return a string, the label of this vertex
+     * @return an int, the label of this vertex
      */
-    String label();
+    public int label() {
+        return label;
+    }
 
     /**
-     * Compares the specified object with this vertex for equality. Returns true
-     * if and only if the specified object is also a vertex and they both have
-     * the same label. In other words, two vertices are equal if their labels
-     * are.
-     * 
-     * @param o the object to be compared with this vertex for equality
-     * @return true if the specified object is equal to this vertex
+     * Returns true if the given object equals this vertex, that is if the given
+     * object is a vertex and their labels are equal.
+     *
+     * @param object the objet to test for equality
+     * @return       true if the given object is a vertex with the same label as
+     *               this vertex
      */
-    @Override boolean equals(Object o);
+    @Override public boolean equals(Object object) {
+        if (object == null) return false;
+        return object.getClass() == getClass()
+            && ((Vertex)object).label() == label();
+    }
 
     /**
-     * Returns the hash code value for this vertex. The hash code value for this
-     * vertex is equal to the hash code of its label.
-     *     
-     * @return an int, the hash code of this vertex.
+     * Returns a hash code for this vertex.
+     *
+     * @return an int, the label of this vertex
      */
-    @Override int hashCode();
+    @Override public int hashCode() {
+        return label;
+    }
 }
