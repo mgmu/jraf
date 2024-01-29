@@ -33,12 +33,11 @@ public class AdjacencyGraph implements Graph {
     @Override public void add(Vertex tail, Vertex head) {
         if (tail == null || head == null)
             throw new NullPointerException("vertices must be non-null");
-        if (!adjacencyMap.containsKey(tail))
-            adjacencyMap.putIfAbsent(tail, new ArrayList<>());
-        if (!adjacencyMap.containsKey(head))
-            adjacencyMap.putIfAbsent(head, new ArrayList<>());
+        adjacencyMap.putIfAbsent(tail, new ArrayList<>());
+        adjacencyMap.putIfAbsent(head, new ArrayList<>());
         List<Vertex> neigh = adjacencyMap.get(tail);
-        neigh.add(head);
+        if (!neigh.contains(head))
+            neigh.add(head);
     }
 
     @Override public List<Vertex> neighborsOf(Vertex vertex) {
