@@ -13,8 +13,8 @@ public class EdgeFunction {
     }
 
     /**
-     * Returns the value associated to edge denoted by the given vertices. The
-     * vertices must be non-null and present.
+     * Returns the value associated to the edge denoted by the given vertices.
+     * The vertices must be non-null and present.
      *
      * @param tail a non-null vertex, the tail of the edge
      * @param head a non-null vertex, the head of the edge
@@ -30,7 +30,7 @@ public class EdgeFunction {
     }
 
     /**
-     * Associates the given int to the edge represented by the given tail and
+     * Associates the given value to the edge represented by the given tail and
      * head vertices. The vertices must be non null. If the corresponding edge
      * is already present, the previous value is replaced by the new value.
      *
