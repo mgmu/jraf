@@ -22,11 +22,13 @@ public class Network {
     private final Vertex source;
     private final Vertex sink;
     private final Graph graph;
+    private final CapacityFunction cap;
 
     private Network(Vertex src, Vertex snk, Graph graph) {
         source = src;
         sink = snk;
         this.graph = graph;
+        cap = new CapacityFunction();
     }
 
     /**
@@ -62,22 +64,30 @@ public class Network {
     }
 
     /**
-     * Adds the edge tail to head to this graph. Tail and head must be non-null,
-     * different, and tail must be different than the sink of this network and
-     * the head must be different than the source. The edge denotes an arc, an
-     * oriented edge from tail to head.
+     * Adds the edge represented by the tail and head vertices to this graph.
+     * The tail and head must be non-null, different, the tail must be
+     * different than the sink of this network and the head must be different
+     * than the source. The edge denotes an arc, a directed edge from tail to
+     * head.
      *
-     * @param tail a non-null vertex, different than the sink, the tail of the
-     *             edge
-     * @param head a non-null vertex, different than the source, the head of the
-     *             edge
+     * @param tail     a non-null vertex, different than the sink, the tail of
+     *                 the edge
+     * @param head     a non-null vertex, different than the source, the head of
+     *                 the edge
+     * @param capacity an integer strictly superior to 0, the capacity of the
+     *                 edge
      */
-    public void add(Vertex tail, Vertex head) {
+    public void add(Vertex tail, Vertex head, int capacity) {
+        if (tail == null || head == null)
+            throw new NullPointerException("vertices must be non-null");
         if (source.equals(head))
             throw new IllegalArgumentException("head is source");
         if (sink.equals(tail))
             throw new IllegalArgumentException("tail is sink");
+        if (tail.equals(head))
+            throw new IllegalArgumentException("edge cannot loop");
         graph.add(tail, head);
+        cap.add(tail, head, capacity);
     }
 
     /**
@@ -119,6 +129,6 @@ public class Network {
     public int capacity(Vertex tail, Vertex head) {
         if (tail == null || head == null)
             throw new NullPointerException("vertices must be non-null");
-        throw new NoSuchElementException("no such edge");
+        return cap.get(tail, head);
     }
 }
