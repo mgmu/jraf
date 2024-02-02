@@ -4,10 +4,17 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
+/**
+ * An edge function associates an integral value to an edge. There can be only
+ * one integral associated to each edge.
+ */
 public class EdgeFunction {
 
     private final Map<Edge, Integer> assoc;
 
+    /**
+     * Class constructor that initializes the empty function.
+     */
     public EdgeFunction() {
         assoc = new HashMap<>();
     }
@@ -18,7 +25,7 @@ public class EdgeFunction {
      *
      * @param tail a non-null vertex, the tail of the edge
      * @param head a non-null vertex, the head of the edge
-     * @return int an int, the value associated to the given vertices
+     * @return     an int, the value associated to the given vertices
      */
     public int get(Vertex tail, Vertex head) {
         if (tail == null || head == null)
