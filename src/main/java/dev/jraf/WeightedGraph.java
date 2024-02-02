@@ -23,6 +23,8 @@ public class WeightedGraph {
     /**
      * Creates a new empty weighted graph that uses an adjacency list
      * and returns it.
+     *
+     * @return a new empty weighted graph
      */
     public static WeightedGraph newAdjacencyWeightedGraph() {
         return new WeightedGraph(new AdjacencyGraph());
@@ -59,8 +61,8 @@ public class WeightedGraph {
      * @return       a list of vertices, the neighbors of the given vertex in
      *               this graph
      */
-    public void neighborsOf(Vertex vertex) {
-        graph.neighborsOf(vertex);
+    public List<Vertex> neighborsOf(Vertex vertex) {
+        return graph.neighborsOf(vertex);
     }
 
     /**
