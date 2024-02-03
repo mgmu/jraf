@@ -18,12 +18,13 @@ import java.util.NoSuchElementException;
  * @see    CapacityFunction
  * @see    Vertex
  */
-public class Network {
+public class Network implements Graph {
 
     private final Vertex source;
     private final Vertex sink;
     private final Graph graph;
     private final EdgeToNaturalFunction cap;
+    private static final int DEFAULT_CAPACITY = 1;
 
     private Network(Vertex src, Vertex snk, Graph graph) {
         source = src;
@@ -56,12 +57,25 @@ public class Network {
     }
 
     /**
-     * Adds the given vertex to this graph. The vertex must be non-null.
-     *
-     * @param vertex a non-null vertex to add to this graph
+     * {@inheritDoc}
      */
-    public void add(Vertex vertex) {
+    @Override public void add(Vertex vertex) {
         graph.add(vertex);
+    }
+
+    /**
+     * Adds the edge representated by the vertices tail and head to this graph.
+     * The tail and the head must be non-null, different, the tail must be
+     * different than the sink of this network and the head must be different
+     * than the source. The capacity of the added edge is the default
+     * capacity, 1. If the edge was already present, its capacity is updated.
+     *
+     * @param tail a non-null vertex, the tail of the edge
+     * @param head a non-null vertex, the head of the edge
+     * 
+     */
+    @Override public void add(Vertex tail, Vertex head) {
+        add(tail, head, DEFAULT_CAPACITY);
     }
 
     /**
@@ -69,7 +83,7 @@ public class Network {
      * The tail and head must be non-null, different, the tail must be
      * different than the sink of this network and the head must be different
      * than the source. The edge denotes an arc, a directed edge from tail to
-     * head.
+     * head. If the edge is already present, its capacity is updated.
      *
      * @param tail     a non-null vertex, different than the sink, the tail of
      *                 the edge
@@ -92,11 +106,9 @@ public class Network {
     }
 
     /**
-     * Returns the vertices of this graph.
-     *
-     * @return a list of vertex objects, the vertices of this graph
+     * {@inheritDoc}
      */
-    public List<Vertex> vertices() {
+    @Override public List<Vertex> vertices() {
         return graph.vertices();
     }
 
@@ -134,15 +146,9 @@ public class Network {
     }
 
     /**
-     * Returns the list of neighbors of the given vertex. The vertex must be
-     * non-null and present in the graph. A neighbor is a vertex that is the
-     * head of an edge that has the given vertex as tail.
-     *
-     * @param vertex a non-null, present vertex
-     * @return       a list of vertices, the neighbors of the given vertex in
-     *               this graph
+     * {@inheritDoc}
      */
-    public List<Vertex> neighborsOf(Vertex vertex) {
+    @Override public List<Vertex> neighborsOf(Vertex vertex) {
         return graph.neighborsOf(vertex);
     }
 

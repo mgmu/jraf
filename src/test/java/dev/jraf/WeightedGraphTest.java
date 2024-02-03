@@ -9,8 +9,8 @@ class WeightedGraphTest {
     @Test
     void addWeightOfAbsentVerticesAddsVerticesAndAssociation() {
         WeightedGraph sut = WeightedGraph.newAdjacencyWeightedGraph();
-        sut.addWeight(Vertex.of(0), Vertex.of(1), 30);
-        sut.addWeight(Vertex.of(1), Vertex.of(2), 42);
+        sut.add(Vertex.of(0), Vertex.of(1), 30);
+        sut.add(Vertex.of(1), Vertex.of(2), 42);
         List<Vertex> vertices = sut.vertices();
         boolean contains0 = vertices.contains(Vertex.of(0));
         boolean contains1 = vertices.contains(Vertex.of(1));
@@ -27,8 +27,8 @@ class WeightedGraphTest {
     @Test
     void addWeightToPresentAssociationUpdatesAssociationValue() {
         WeightedGraph sut = WeightedGraph.newAdjacencyWeightedGraph();
-        sut.addWeight(Vertex.of(0), Vertex.of(1), 30);
-        sut.addWeight(Vertex.of(0), Vertex.of(1), 42);
+        sut.add(Vertex.of(0), Vertex.of(1), 30);
+        sut.add(Vertex.of(0), Vertex.of(1), 42);
         assertEquals(42, sut.weight(Vertex.of(0), Vertex.of(1)));
     }
 }
