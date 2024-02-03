@@ -2,6 +2,7 @@ package dev.jraf;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.NoSuchElementException;
 
 /**
@@ -22,13 +23,13 @@ public class Network {
     private final Vertex source;
     private final Vertex sink;
     private final Graph graph;
-    private final CapacityFunction cap;
+    private final EdgeToNaturalFunction cap;
 
     private Network(Vertex src, Vertex snk, Graph graph) {
         source = src;
         sink = snk;
         this.graph = graph;
-        cap = new CapacityFunction();
+        cap = new EdgeToNaturalFunction();
     }
 
     /**
@@ -130,5 +131,60 @@ public class Network {
         if (tail == null || head == null)
             throw new NullPointerException("vertices must be non-null");
         return cap.get(tail, head);
+    }
+
+    /**
+     * Returns the list of neighbors of the given vertex. The vertex must be
+     * non-null and present in the graph. A neighbor is a vertex that is the
+     * head of an edge that has the given vertex as tail.
+     *
+     * @param vertex a non-null, present vertex
+     * @return       a list of vertices, the neighbors of the given vertex in
+     *               this graph
+     */
+    public List<Vertex> neighborsOf(Vertex vertex) {
+        return graph.neighborsOf(vertex);
+    }
+
+    /**
+     * Computes the residual network of this network based on the given flow
+     * function. The flow function must respect for every edge of the network
+     * the capacity constraint (that is for any edge of the network, its flow is
+     * superior or equal to 0 and inferior or equal to its capacity). The
+     * residual graph of this network contains the same vertices and the edges
+     * of this network such that their capacity minus their flow is strictly
+     * superior to 0.
+     *
+     * @param flow a non-null function that associates edges of this network to
+     *             integrals superior or equal to 0 and inferior or equal to
+     *             their capacity
+     */
+    public Network residual(EdgeToNaturalFunction flow) {
+        if (flow == null)
+            throw new NullPointerException("edge function must be non-null");
+        Network res = Network.newAdjacency(source, sink);
+        Stack<Vertex> stack = new Stack<>();
+        List<Vertex> visited = new ArrayList<>();
+        stack.push(source);
+        visited.add(source);
+        while (!stack.isEmpty()) {
+            Vertex cur = stack.pop();
+            List<Vertex> neighbors = neighborsOf(cur);
+            for (Vertex neighbor: neighbors) {
+                int resCap = capacity(cur, neighbor) - flow.get(cur, neighbor);
+                if (resCap < 0) {
+                    throw new IllegalArgumentException("flow does not respect"
+                            + " capacity constraint");
+                }
+                if (resCap == 0)
+                    continue;
+                res.add(cur, neighbor, resCap);
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    stack.push(neighbor);
+                }
+            }
+        }
+        return res;
     }
 }

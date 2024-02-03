@@ -1,21 +1,22 @@
 package dev.jraf;
 
 /**
- * The implementation of the capacity function, a function that associates an
- * integral value strictly superior to 0 to some arc.
+ * The implementation of a function that associates an integral value superior
+ * or equal to 0 to some edge. This function can be refered to as the capacity
+ * function.
  *
  * @author Guillermo Morón Usón
  * @see    EdgeFunction
  * @see    Vertex
  */
-public class CapacityFunction {
+public class EdgeToNaturalFunction {
 
     private final EdgeFunction func;
 
     /**
      * Class constructor that creates an empty capacity function.
      */
-    public CapacityFunction() {
+    public EdgeToNaturalFunction() {
         func = new EdgeFunction();
     }
 
@@ -32,18 +33,18 @@ public class CapacityFunction {
     }
 
     /**
-     * Associates the given capacity to the edge represented by the given tail
-     * and head vertices. The vertices must be non null and the capacity must be
-     * strictly superior to 0. If the corresponding edge is already present, the
-     * previous capacity is replaced by the new capacity.
+     * Associates the given value to the edge represented by the given tail
+     * and head vertices. The vertices must be non null and the value must be
+     * superior or equal to 0. If the corresponding edge is already present, the
+     * previous value is replaced by the new value.
      *
      * @param tail     a non-null vertex, the tail of the edge
      * @param head     a non-null vertex, the head of the edge
-     * @param capacity the capacity to associate to the given edge
+     * @param value    the value to associate to the given edge
      */
-    public void add(Vertex tail, Vertex head, int capacity) {
-        if (capacity < 1)
-            throw new IllegalArgumentException("capacity must be > 0");
-        func.add(tail, head, capacity);
+    public void add(Vertex tail, Vertex head, int value) {
+        if (value < 0)
+            throw new IllegalArgumentException("value must be >= 0");
+        func.add(tail, head, value);
     }
 }
