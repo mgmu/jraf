@@ -76,8 +76,12 @@ public interface Graph {
 
     /**
      * Returns true if there is no cycle in the graph. A cycle is a sequence of
-     * vertices of size strictly superior to 2 where only the first and the last
-     * vertices are equal.
+     * edges of the graph, such that:
+     * - each pair of consecutive edges (e1, e2) respect the property that the
+     *   head of e1 is equal to the tail of e2.
+     * - the tail of the first edge of the cycle is equal to the head of the
+     *   last edge
+     * - the sequence contains at least two edges
      *
      * @return a boolean, true if this graph contains no cycle
      */

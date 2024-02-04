@@ -124,7 +124,7 @@ class AdjacencyGraphTest {
     }
 
     @Test
-    void isAcyclicReturnsFalseForNonEmptyGraphWithoutCycles() {
+    void isAcyclicReturnsTrueForLineGraph() {
         Graph sut = new AdjacencyGraph();
         sut.add(Vertex.of(0), Vertex.of(1));
         sut.add(Vertex.of(1), Vertex.of(2));
@@ -219,5 +219,12 @@ class AdjacencyGraphTest {
         boolean p1is1 = parents.get(v1.label()) == v1.label();
         assertTrue(sizeIs6 && p2is1 && p3is1 && p6is2 && p4is2 && p5is3
                 && p1is1);
+    }
+
+    @Test
+    void isAcyclicReturnsTrueForGraphWithOneIsolatedVertex() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(Vertex.of(0));
+        assertTrue(sut.isAcyclic());
     }
 }

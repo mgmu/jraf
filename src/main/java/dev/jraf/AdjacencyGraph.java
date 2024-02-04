@@ -121,8 +121,30 @@ public class AdjacencyGraph implements Graph {
     @Override public boolean isAcyclic() {
         if (adjacencyMap.isEmpty())
             return true;
-        List<Vertex> visited = new ArrayList<>();
-        Stack<Vertex> stack = new Stack<>();
-        return false;
+        Set<Vertex> vertices = Set.copyOf(vertices());
+        Set<Vertex> visited = new HashSet<>();
+        while (!visited.containsAll(vertices)) {
+            Set<Vertex> rem = new HashSet<>();
+            Set.copyOf(vertices()); 
+            rem.removeAll(visited); // rem is an unmodfiable set -> UOE !
+            if (rem.size() == 0)
+                throw new IllegalStateException("set visited does not contain"
+                        + " every vertex but set of vertices minus set of"
+                        + " visited is empty");
+            Vertex source = (Vertex) rem.toArray()[0];
+            Queue<Vertex> queue = new ArrayDeque<>();
+            queue.add(source);
+            Vertex current = null;
+            while (!queue.isEmpty()) {
+                current = queue.remove();
+                visited.add(current);
+                for (Vertex neighbor: neighborsOf(current)) {
+                    if (visited.contains(neighbor) || queue.contains(neighbor))
+                        return false;
+                    queue.add(neighbor);
+                }
+            }
+        }
+        return true;
     }
 }
