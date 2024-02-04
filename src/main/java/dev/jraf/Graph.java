@@ -48,4 +48,23 @@ public interface Graph {
      * @return a list of vertex objects, the vertices of this graph
      */
     List<Vertex> vertices();
+
+    /**
+     * Removes the edge that links the given tail to the given head. The
+     * vertices must be non-null and present. If the edge does not exist, does
+     * nothing.
+     *
+     * @param tail a non-null present vertex, the tail of the edge to remove
+     * @param head a non-null present vertex, the head of the edge to remove
+     */
+    void remove(Vertex tail, Vertex head);
+
+    /**
+     * Returns true if there is no cycle in the graph. A cycle is a sequence of
+     * vertices of size strictly superior to 2 where only the first and the last
+     * vertices are equal.
+     *
+     * @return a boolean, true if this graph contains no cycle
+     */
+    boolean isAcyclic();
 }

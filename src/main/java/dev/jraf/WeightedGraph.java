@@ -90,4 +90,18 @@ public class WeightedGraph implements Graph {
     public int weight(Vertex tail, Vertex head) {
         return weightFun.get(tail, head);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void remove(Vertex tail, Vertex head) {
+        throw new UnsupportedOperationException("todo");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public boolean isAcyclic() {
+        return true;
+    }
 }

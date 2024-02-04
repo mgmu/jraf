@@ -193,4 +193,18 @@ public class Network implements Graph {
         }
         return res;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void remove(Vertex tail, Vertex head) {
+        throw new UnsupportedOperationException("todo");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public boolean isAcyclic() {
+        return true;
+    }
 }
