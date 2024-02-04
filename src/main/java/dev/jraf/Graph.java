@@ -1,6 +1,7 @@
 package dev.jraf;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The representation of a graph. Here a graph denotes a tuple of two sets: the
@@ -48,4 +49,37 @@ public interface Graph {
      * @return a list of vertex objects, the vertices of this graph
      */
     List<Vertex> vertices();
+
+    /**
+     * Removes the edge that links the given tail to the given head. The
+     * vertices must be non-null and present. If the edge does not exist, does
+     * nothing.
+     *
+     * @param tail a non-null present vertex, the tail of the edge to remove
+     * @param head a non-null present vertex, the head of the edge to remove
+     */
+    void remove(Vertex tail, Vertex head);
+
+    /**
+     * Performs a breadth-first search starting from the given vertex in this
+     * graph and returns the resulting vertex label to parent label association.
+     * The map associates the label of every vertex reached from the source to
+     * the label of its parent. The parent vertex of vertex v is the vertex
+     * preceding vertex v in the path from the source to vertex v. The label of
+     * the source is associated to itself.
+     *
+     * @param source a non-null present vertex
+     * @return       a map that associates an integer to an integer, the parents
+     *               association obtained by performing the BFS run.
+     */
+    Map<Integer, Integer> breadthFirstSearch(Vertex source);
+
+    /**
+     * Returns true if there is no cycle in the graph. A cycle is a sequence of
+     * vertices of size strictly superior to 2 where only the first and the last
+     * vertices are equal.
+     *
+     * @return a boolean, true if this graph contains no cycle
+     */
+    boolean isAcyclic();
 }
