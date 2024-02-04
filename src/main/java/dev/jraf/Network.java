@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.NoSuchElementException;
+import java.util.Map;
 
 /**
  * The implementation of a network. A network is a graph that has two special
@@ -199,6 +200,13 @@ public class Network implements Graph {
      */
     @Override public void remove(Vertex tail, Vertex head) {
         throw new UnsupportedOperationException("todo");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Map<Integer, Integer> breadthFirstSearch(Vertex source) {
+        return graph.breadthFirstSearch(source);
     }
 
     /**

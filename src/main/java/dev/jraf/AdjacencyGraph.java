@@ -6,6 +6,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.NoSuchElementException;
+import java.util.Queue;
+import java.util.ArrayDeque;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * An implementation of the graph interface that uses an adjacency list.
@@ -82,6 +86,33 @@ public class AdjacencyGraph implements Graph {
             throw new IllegalArgumentException("vertices must be present");
         List<Vertex> assoc = adjacencyMap.get(tail);
         assoc.remove(head);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Map<Integer, Integer> breadthFirstSearch(Vertex source) {
+        if (source == null)
+            throw new NullPointerException("vertex must be non-null");
+        if (!adjacencyMap.containsKey(source))
+            throw new IllegalArgumentException("vertex must be present");
+        Map<Integer, Integer> parents = new HashMap<>();
+        parents.put(source.label(), source.label());
+        Queue<Vertex> visit = new ArrayDeque<>();
+        Set<Vertex> visited = new HashSet<>();
+        visit.add(source);
+        Vertex current = null;
+        while (!visit.isEmpty()) {
+            current = visit.remove();
+            visited.add(current);
+            for (Vertex neighbor: neighborsOf(current)) {
+                if (!visited.contains(neighbor) && !visit.contains(neighbor)) {
+                    parents.put(neighbor.label(), current.label());
+                    visit.add(neighbor);
+                }
+            }
+        }
+        return parents;
     }
 
     /**

@@ -88,6 +88,16 @@ public class Tree implements Graph {
         throw new UnsupportedOperationException("todo");
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Map<Integer, Integer> breadthFirstSearch(Vertex source) {
+        return graph.breadthFirstSearch(source);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override public boolean isAcyclic() {
         return false;
     }

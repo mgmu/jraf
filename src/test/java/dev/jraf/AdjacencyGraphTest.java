@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.NoSuchElementException;
 import java.util.List;
+import java.util.Map;
 
 class AdjacencyGraphTest {
 
@@ -128,5 +129,95 @@ class AdjacencyGraphTest {
         sut.add(Vertex.of(0), Vertex.of(1));
         sut.add(Vertex.of(1), Vertex.of(2));
         assertFalse(sut.isAcyclic());
+    }
+
+    @Test
+    void bfsFromNullThrowsNPEWithMessage() {
+        Graph sut = new AdjacencyGraph();
+        Exception e = assertThrows(NullPointerException.class,
+                () -> sut.breadthFirstSearch(null));
+        assertEquals("vertex must be non-null", e.getMessage());
+    }
+
+    @Test
+    void bfsWithAbsentVertexThrowsIAEWithMessage() {
+        Graph sut = new AdjacencyGraph();
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> sut.breadthFirstSearch(Vertex.of(0)));
+        assertEquals("vertex must be present", e.getMessage());
+    }
+
+    @Test
+    void bfsFromPresentSrcAndGraphContainsOnlySrcReturnsAssocSrcToSrc() {
+        Graph sut = new AdjacencyGraph();
+        Vertex src = Vertex.of(0);
+        sut.add(src);
+        Map<Integer, Integer> parents = sut.breadthFirstSearch(src);
+        boolean size1 = parents.size() == 1;
+        boolean srcToSrc = src.label() == parents.get(src.label());
+        assertTrue(size1 && srcToSrc);
+    }
+
+    @Test
+    void bfsOfGraphCycleReturnsCorrectAssociation() {
+        Graph sut = new AdjacencyGraph();
+        Vertex v1 = Vertex.of(1);
+        Vertex v2 = Vertex.of(2);
+        Vertex v3 = Vertex.of(3);
+        sut.add(v1, v2);
+        sut.add(v2, v3);
+        sut.add(v3, v1);
+        Map<Integer, Integer> parents = sut.breadthFirstSearch(v2);
+        boolean size3 = parents.size() == 3;
+        boolean p3is2 = parents.get(v3.label()) == v2.label();
+        boolean p1is3 = parents.get(v1.label()) == v3.label();
+        assertTrue(size3 && p3is2 && p1is3);
+    }
+
+    @Test
+    void bfsOfGraphWithMultipleConnComponentsReturnsCorrectAssociation() {
+        Graph sut = new AdjacencyGraph();
+        Vertex v1 = Vertex.of(1);
+        Vertex v2 = Vertex.of(2);
+        Vertex v3 = Vertex.of(3);
+        Vertex v4 = Vertex.of(4);
+        sut.add(v1, v2);
+        sut.add(v3, v4);
+        Map<Integer, Integer> parents = sut.breadthFirstSearch(v3);
+        boolean size2 = parents.size() == 2;
+        boolean p4is3 = parents.get(v4.label()) == v3.label();
+        boolean p3is3 = parents.get(v3.label()) == v3.label();
+        assertTrue(size2 && p4is3 && p3is3);
+    }
+
+    @Test
+    void bfsOfSomeGraphReturnsCorrectAssociation() {
+        Graph sut = new AdjacencyGraph();
+        Vertex v1 = Vertex.of(1);
+        Vertex v2 = Vertex.of(2);
+        Vertex v3 = Vertex.of(3);
+        Vertex v4 = Vertex.of(4);
+        Vertex v5 = Vertex.of(5);
+        Vertex v6 = Vertex.of(6);
+        sut.add(v1, v2);
+        sut.add(v1, v3);
+        sut.add(v2, v3);
+        sut.add(v2, v4);
+        sut.add(v2, v6);
+        sut.add(v3, v4);
+        sut.add(v3, v5);
+        sut.add(v4, v5);
+        sut.add(v4, v6);
+        sut.add(v5, v6);
+        Map<Integer, Integer> parents = sut.breadthFirstSearch(v1);
+        boolean sizeIs6 = parents.size() == 6;
+        boolean p2is1 = parents.get(v2.label()) == v1.label();
+        boolean p3is1 = parents.get(v3.label()) == v1.label();
+        boolean p6is2 = parents.get(v6.label()) == v2.label();
+        boolean p4is2 = parents.get(v4.label()) == v2.label();
+        boolean p5is3 = parents.get(v5.label()) == v3.label();
+        boolean p1is1 = parents.get(v1.label()) == v1.label();
+        assertTrue(sizeIs6 && p2is1 && p3is1 && p6is2 && p4is2 && p5is3
+                && p1is1);
     }
 }
