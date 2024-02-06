@@ -22,6 +22,13 @@ public interface Graph {
     void add(Vertex vertex);
 
     /**
+     * Creates a new vertex of given label and adds it if not present.
+     *
+     * @param label an int, the label of the vertex to add
+     */
+    void add(int label);
+
+    /**
      * Adds the edge tail to head to this graph. Tail and head must be non-null,
      * and they can be equal (self loops are authorized, but can be forbidden in
      * implementations). The edge denotes an arc, a directed edge from tail to
@@ -31,6 +38,18 @@ public interface Graph {
      * @param head a non-null vertex, the head of the edge
      */
     void add(Vertex tail, Vertex head);
+
+    /**
+     * Adds the edge that starts at the vertex that has the label tail and ends
+     * at the vertex that has the label head. Tail and head can be equal (self
+     * loops are authorized, but can be forbidden in implementations). The edge
+     * denotes an arc, a directed edge from tail to head. The addition of an
+     * already present edge has no effect.
+     *
+     * @param tail an int, the label of the tail of the edge
+     * @param head an int, the label of the head of the edge
+     */
+    void add(int tail, int head);
 
     /**
      * Returns the list of the neighbors of the given vertex. The vertex must be

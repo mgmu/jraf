@@ -43,6 +43,13 @@ public class AdjacencyGraph implements Graph {
     /**
      * {@inheritDoc}
      */
+    @Override public void add(int label) {
+        add(Vertex.of(label));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override public void add(Vertex tail, Vertex head) {
         if (tail == null || head == null)
             throw new NullPointerException("vertices must be non-null");
@@ -51,6 +58,13 @@ public class AdjacencyGraph implements Graph {
         List<Vertex> neigh = adjacencyMap.get(tail);
         if (!neigh.contains(head))
             neigh.add(head);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void add(int tail, int head) {
+        add(Vertex.of(tail), Vertex.of(head));
     }
 
     /**

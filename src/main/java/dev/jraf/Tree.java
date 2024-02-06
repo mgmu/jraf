@@ -43,6 +43,16 @@ public class Tree implements Graph {
     }
 
     /**
+     * Throws an UnsupportedOperationException as a Tree must be connected (that
+     * is it cannot contain isolated vertices).
+     *
+     * @param label an int, the label of a vertex
+     */
+    public void add(int label) {
+        throw new UnsupportedOperationException("cannot add isolated vertex");
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void add(Vertex tail, Vertex head) {
@@ -56,6 +66,13 @@ public class Tree implements Graph {
             graph.remove(tail, head);
             throw new IllegalArgumentException("cannot form cycle");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void add(int tail, int head) {
+        add(Vertex.of(tail), Vertex.of(head));
     }
 
     /**
