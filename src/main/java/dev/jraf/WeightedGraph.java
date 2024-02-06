@@ -40,6 +40,13 @@ public class WeightedGraph implements Graph {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override public void add(int label) {
+        graph.add(Vertex.of(label));
+    }
+
+    /**
      * Adds the edge tail to head to this graph. Tail and head must be non-null,
      * and they can be equal (self loops are authorized, but can be forbidden in
      * implementations). The edge denotes an arc, an oriented edge from tail to
@@ -50,6 +57,17 @@ public class WeightedGraph implements Graph {
      */
     @Override public void add(Vertex tail, Vertex head) {
         add(tail, head, DEFAULT_WEIGHT);
+    }
+
+    /**
+     * Adds the edge between the vertices of given labels. The labels can be
+     * equal. Its weight defaults to 1.
+     *
+     * @param tail an int, the label of the tail of the edge
+     * @param head an int, the label of the head of the edge
+     */
+    @Override public void add(int tail, int head) {
+        add(Vertex.of(tail), Vertex.of(head), DEFAULT_WEIGHT);
     }
 
     /**

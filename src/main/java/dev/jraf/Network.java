@@ -65,6 +65,13 @@ public class Network implements Graph {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override public void add(int label) {
+        graph.add(Vertex.of(label));
+    }
+
+    /**
      * Adds the edge representated by the vertices tail and head to this graph.
      * The tail and the head must be non-null, different, the tail must be
      * different than the sink of this network and the head must be different
@@ -77,6 +84,21 @@ public class Network implements Graph {
      */
     @Override public void add(Vertex tail, Vertex head) {
         add(tail, head, DEFAULT_CAPACITY);
+    }
+
+    /**
+     * Adds the edge representated by the vertices of given labels. The labels
+     * must be different, the tail label must be different than the sink label
+     * of this network and the head label must be different than the source
+     * label. The capacity of the added edge is the default capacity, 1. If the
+     * edge was already present, its capacity is updated.
+     *
+     * @param tail an int, the label of the tail of the edge
+     * @param head an int, the label of the head of the edge
+     * 
+     */
+    @Override public void add(int tail, int head) {
+        add(Vertex.of(tail), Vertex.of(head), DEFAULT_CAPACITY);
     }
 
     /**
