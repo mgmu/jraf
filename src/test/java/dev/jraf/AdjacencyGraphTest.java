@@ -124,11 +124,11 @@ class AdjacencyGraphTest {
     }
 
     @Test
-    void isAcyclicReturnsFalseForNonEmptyGraphWithoutCycles() {
+    void isAcyclicReturnsTrueForLineGraph() {
         Graph sut = new AdjacencyGraph();
         sut.add(Vertex.of(0), Vertex.of(1));
         sut.add(Vertex.of(1), Vertex.of(2));
-        assertFalse(sut.isAcyclic());
+        assertTrue(sut.isAcyclic());
     }
 
     @Test
@@ -219,5 +219,70 @@ class AdjacencyGraphTest {
         boolean p1is1 = parents.get(v1.label()) == v1.label();
         assertTrue(sizeIs6 && p2is1 && p3is1 && p6is2 && p4is2 && p5is3
                 && p1is1);
+    }
+
+    @Test
+    void isAcyclicReturnsTrueForGraphWithOneIsolatedVertexWithoutLoop() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(Vertex.of(0));
+        assertTrue(sut.isAcyclic());
+    }
+
+    @Test
+    void isAcyclicReturnsFalseForGraphWithOneIsolatedVertexWithLoop() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(Vertex.of(0), Vertex.of(0));
+        assertFalse(sut.isAcyclic());
+    }
+
+    @Test
+    void isAcyclicReturnsFalseIfAComponentContainsCycle() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(Vertex.of(0), Vertex.of(1));
+        sut.add(Vertex.of(1), Vertex.of(0));
+        sut.add(Vertex.of(2), Vertex.of(3));
+        assertFalse(sut.isAcyclic());
+    }
+
+    @Test
+    void isAcyclicReturnsTrueIfGraphIsADag() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(Vertex.of(0), Vertex.of(1));
+        sut.add(Vertex.of(0), Vertex.of(2));
+        assertTrue(sut.isAcyclic());
+    }
+   
+    @Test
+    void isAcyclicReturnsTrueIfGraphHasNoCycle() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(Vertex.of(1), Vertex.of(2));
+        sut.add(Vertex.of(1), Vertex.of(3));
+        sut.add(Vertex.of(3), Vertex.of(4));
+        sut.add(Vertex.of(2), Vertex.of(3));
+        sut.add(Vertex.of(2), Vertex.of(4));
+        assertTrue(sut.isAcyclic());
+    }
+
+    @Test
+    void isAcyclicReturnsFalseIfGraphHasCycleWithBiggerExample() {
+        Graph sut = new AdjacencyGraph();
+        Vertex v0 = Vertex.of(0);
+        Vertex v1 = Vertex.of(1);
+        Vertex v2 = Vertex.of(2);
+        Vertex v3 = Vertex.of(3);
+        Vertex v4 = Vertex.of(4);
+        Vertex v5 = Vertex.of(5);
+        Vertex v6 = Vertex.of(6);
+        sut.add(v0, v1);
+        sut.add(v0, v2);
+        sut.add(v1, v3);
+        sut.add(v1, v5);
+        sut.add(v2, v5);
+        sut.add(v3, v6);
+        sut.add(v4, v1);
+        sut.add(v4, v6);
+        sut.add(v5, v4);
+        sut.add(v5, v6);
+        assertFalse(sut.isAcyclic());
     }
 }
