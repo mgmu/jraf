@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.NoSuchElementException;
-import java.util.Queue;
-import java.util.ArrayDeque;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Stack;
+import java.util.Queue;
+import java.util.ArrayDeque;
+import java.util.Optional;
 
 /**
  * An implementation of the graph interface that uses an adjacency list.
@@ -115,6 +117,54 @@ public class AdjacencyGraph implements Graph {
         return parents;
     }
 
+    /*
+     * Dives from src into this graph, adds to visited the vertices visited
+     * during the dive, adds the untaken arcs in the untaken set and returns a
+     * parent map, such that u -> v means that v is the parent of u in the dive.
+     * src is the only vertex that has itself as a parent. If the graph contains
+     * a vertex that loops on itself, returns the empty optional.
+     */
+    private Optional<Map<Integer, Integer>> diveAndUpdate(Vertex src,
+            Set<Vertex> visited, Set<Edge> untaken) {
+        Map<Integer, Integer> parents = new HashMap<>();
+        parents.put(src.label(), src.label());
+        Stack<Vertex> stack = new Stack<>();
+        stack.add(src);
+        Vertex current = null;
+        while (!stack.isEmpty()) {
+            current = stack.pop();
+            visited.add(current);
+            for (Vertex neighbor: neighborsOf(current)) {
+                if (neighbor.equals(current)) // self-loop
+                    return Optional.empty();
+                if (visited.contains(neighbor))
+                    untaken.add(Edge.of(current.label(), neighbor.label()));
+                else {
+                    stack.push(neighbor);
+                    parents.put(neighbor.label(), current.label());
+                }
+            }
+        }
+        return Optional.of(parents);
+    }
+
+    /*
+     * Returns true if tail is a descendant of head in the parents map. parents
+     * is of the same form than returned in diveAndUpdate.
+     */
+    private static boolean isTailDescendantOfHead(Vertex tail, Vertex head,
+            Map<Integer, Integer> parents) {
+        int cur = tail.label();
+        int parent = parents.get(cur);
+        while (parent != head.label() && parent != cur) {
+            cur = parent;
+            parent = parents.get(cur);
+        }
+        if (parent == head.label())
+            return true;
+        return false;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -125,24 +175,25 @@ public class AdjacencyGraph implements Graph {
         Set<Vertex> visited = new HashSet<>();
         while (!visited.containsAll(vertices)) {
             Set<Vertex> rem = new HashSet<>();
-            Set.copyOf(vertices()); 
-            rem.removeAll(visited); // rem is an unmodfiable set -> UOE !
+            for (Vertex vertex: vertices()) {
+                if (!visited.contains(vertex))
+                    rem.add(vertex);
+            }
             if (rem.size() == 0)
-                throw new IllegalStateException("set visited does not contain"
-                        + " every vertex but set of vertices minus set of"
-                        + " visited is empty");
+                throw new IllegalStateException("remaining vertices set should "
+                        + "not be empty");
+            // safe because rem contains Vertex type elements and has size != 0
             Vertex source = (Vertex) rem.toArray()[0];
-            Queue<Vertex> queue = new ArrayDeque<>();
-            queue.add(source);
-            Vertex current = null;
-            while (!queue.isEmpty()) {
-                current = queue.remove();
-                visited.add(current);
-                for (Vertex neighbor: neighborsOf(current)) {
-                    if (visited.contains(neighbor) || queue.contains(neighbor))
-                        return false;
-                    queue.add(neighbor);
-                }
+            Set<Edge> untaken = new HashSet<>();
+            Optional<Map<Integer, Integer>> opt = diveAndUpdate(source, visited,
+                    untaken);
+            if (opt.isEmpty())
+                return false;
+            Map<Integer, Integer> parents = opt.get();
+            for (Edge edge: untaken) {
+                if (AdjacencyGraph.isTailDescendantOfHead(edge.tail(),
+                                edge.head(), parents))
+                    return false;
             }
         }
         return true;
