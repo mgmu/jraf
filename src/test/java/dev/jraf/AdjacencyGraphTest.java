@@ -285,4 +285,38 @@ class AdjacencyGraphTest {
         sut.add(v5, v6);
         assertFalse(sut.isAcyclic());
     }
+
+    @Test
+    void degreeOfNullVertexThrowsNPEWithMessage() {
+        Graph sut = new AdjacencyGraph();
+        Exception e = assertThrows(NullPointerException.class,
+                () -> sut.degreeOf(null));
+        assertEquals("vertex must be non-null", e.getMessage());
+    }
+
+    @Test
+    void degreeOfAbsentVertexThrowsNoSuchElementExceptionWithMessage() {
+        Graph sut = new AdjacencyGraph();
+        Exception e = assertThrows(NoSuchElementException.class,
+                () -> sut.degreeOf(Vertex.of(42)));
+        assertEquals("vertex must be present", e.getMessage());
+    }
+
+    @Test
+    void degreeOfVertexWith3NeighborsReturns3() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(0, 1);
+        sut.add(0, 2);
+        sut.add(0, 3);
+        assertEquals(3, sut.degreeOf(Vertex.of(0)));
+    }
+
+    @Test
+    void degreeOfVertexWith0NeighborsReturns0() {
+        Graph sut = new AdjacencyGraph();
+        sut.add(0, 1);
+        sut.add(0, 2);
+        sut.add(0, 3);
+        assertEquals(0, sut.degreeOf(Vertex.of(1)));
+    }
 }

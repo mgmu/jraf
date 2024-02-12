@@ -2,6 +2,7 @@ package dev.jraf;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * The representation of a graph. Here a graph denotes a tuple of two sets: the
@@ -105,4 +106,32 @@ public interface Graph {
      * @return a boolean, true if this graph contains no cycle
      */
     boolean isAcyclic();
+
+    /**
+     * Returns the degree of the given vertex. The vertex must be non-null and
+     * present. The degree of a vertex is the number of arcs that start at it.
+     *
+     * @param vertex a non-null, present vertex
+     * @return       an int, the degree of the vertex
+     */
+    default int degreeOf(Vertex vertex) {
+        if (vertex == null)
+            throw new NullPointerException("vertex must be non-null");
+        List<Vertex> vertices = vertices();
+        if (!vertices.contains(vertex))
+            throw new NoSuchElementException("vertex must be present");
+        List<Vertex> neighbors = neighborsOf(vertex);
+        return neighbors.size();
+    }
+
+    /**
+     * Returns the degree of the vertex of given label. The vertex must be
+     * present. The degree of a vertex is the number of arcs that start at it.
+     *
+     * @param label the label of the vertex
+     * @return      an int, the degree of the vertex of given label
+     */
+    default int degreeOf(int label) {
+        return degreeOf(Vertex.of(label));
+    }
 }
